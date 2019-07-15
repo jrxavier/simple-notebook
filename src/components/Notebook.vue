@@ -4,18 +4,19 @@
       <h3 class="display-4">Simple Notebok</h3>
     </div>
 
-    <div class="container-fluid">
+    <div class="container">
       <div class="row">
         <div class="col-md">
           <h3>Adicionar Nota</h3>
           <button type="button" class="btn btn-primary" @click="addNote" :title="addButtonTitle">
             <i class="fa fa-plus"></i> Nova nota
           </button>
-          <div
-            v-for="note in notes"
-            @click="selectNote(note)"
-            :class="{selected: note === notaSelecionada}"
-          >{{note.title}}</div>
+          <div class="container" v-for="note in notes">
+            <span
+              @click="selectNote(note)"
+              v-bind:class="{'badge': true, 'badge-primary': note === notaSelecionada}"
+            >{{note.title}}</span>
+          </div>
         </div>
         <template v-if="notaSelecionada">
           <div class="col-md">
