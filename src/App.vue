@@ -1,23 +1,23 @@
 <template>
   <div id="app">
-    <Notebook/>
+    <Notebook />
   </div>
 </template>
 
 <script>
-import Notebook from './components/Notebook.vue'
+import Notebook from "./components/Notebook.vue";
 
 export default {
-  name: 'app',
+  name: "app",
   components: {
     Notebook
   }
-}
+};
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

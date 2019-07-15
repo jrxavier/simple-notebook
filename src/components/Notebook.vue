@@ -11,18 +11,35 @@
           <button type="button" class="btn btn-primary" @click="addNote" :title="addButtonTitle">
             <i class="fa fa-plus"></i> Nova nota
           </button>
-          <div class="container" v-for="note in notes">
+          <div class="container" v-for="note in sortedNotes">
             <span
               @click="selectNote(note)"
               v-bind:class="{'badge': true, 'badge-primary': note === notaSelecionada}"
             >{{note.title}}</span>
+            <span class="glyphicon glyphicon-star"></span>
           </div>
         </div>
         <template v-if="notaSelecionada">
           <div class="col-md">
-            <h3>Entrada</h3>
+            <div class="input-group mb-3">
+              <input
+                type="text"
+                class="form-control"
+                v-model="notaSelecionada.title"
+                placeholder="Note title"
+              />
+              <div class="input-group-append">
+                <button @click="removeNote" class="btn btn-primary" type="button">Remover</button>
+              </div>
+            </div>
             <div class="form-group green-border-focus">
               <textarea v-model="notaSelecionada.content" class="form-control" rows="3"></textarea>
+              <div class="toolbas status-bar">
+                <span class="date">
+                  <span class="label">Created:</span>
+                  <span class="value">{{notaSelecionada.created | date}}</span>
+                </span>
+              </div>
             </div>
           </div>
           <div class="col-md">
@@ -44,8 +61,8 @@ export default {
     return {
       content:
         localStorage.getItem("content") || "You can write in **markdown**",
-      notes: [],
-      selectedId: null
+      notes: JSON.parse(localStorage.getItem("notes")) || [],
+      selectedId: localStorage.getItem("selected-id") || null
     };
   },
   created() {
@@ -55,6 +72,10 @@ export default {
   methods: {
     saveNote(val) {
       localStorage.setItem("content", val);
+    },
+    saveNotes() {
+      localStorage.setItem("notes", JSON.stringify(this.notes));
+      console.log("Notes saved!", new Date());
     },
     addNote() {
       const time = Date.now();
@@ -69,6 +90,14 @@ export default {
     },
     selectNote(note) {
       this.selectedId = note.id;
+    },
+    removeNote() {
+      if (this.notaSelecionada && confirm("Remover a nota?")) {
+        const index = this.notes.indexOf(this.notaSelecionada);
+        if (index !== -1) {
+          this.notes.splice(index, 1);
+        }
+      }
     }
   },
   computed: {
@@ -80,10 +109,19 @@ export default {
     },
     notaSelecionada() {
       return this.notes.find(note => note.id === this.selectedId);
+    },
+    sortedNotes() {
+      return this.notes.slice().sort((a, b) => a.created - b.created);
     }
   },
   watch: {
-    content: "saveNote"
+    notes: {
+      handler: "saveNotes",
+      deep: true
+    },
+    selectedId(val) {
+      localStorage.setItem("selected-id", val);
+    }
   }
 };
 </script>
