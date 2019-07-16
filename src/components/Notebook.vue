@@ -39,6 +39,14 @@
                   <span class="label">Created:</span>
                   <span class="value">{{notaSelecionada.created | date}}</span>
                 </span>
+                <span class="lines">
+                  <span class="label">Lines</span>
+                  <span class="value">{{ linesCount }}</span>
+                </span>
+                <span class="characters">
+                  <span class="label">Characters</span>
+                  <span class="value">{{ charactersCount }}</span>
+                </span>
               </div>
             </div>
           </div>
@@ -112,6 +120,25 @@ export default {
     },
     sortedNotes() {
       return this.notes.slice().sort((a, b) => a.created - b.created);
+    },
+    linesCount() {
+      if (this.notaSelecionada) {
+        return this.notaSelecionada.content.split(/\r\n|\r\n/).length;
+      }
+    },
+    wordsCount() {
+      if (this.notaSelecionada) {
+        var s = this.notaSelecionada.content;
+        s = s.replace(/\n/g, " ");
+        s = s.replace(/(^\s*)|(\s*$)/gi, "");
+        s = s.replace(/\s\s+/gi, " ");
+        return s.split(" ").lenght;
+      }
+    },
+    charactersCount() {
+      if (this.notaSelecionada) {
+        return this.notaSelecionada.content.split("").length;
+      }
     }
   },
   watch: {
